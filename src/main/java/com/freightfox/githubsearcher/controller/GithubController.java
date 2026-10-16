@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/github")
-@Tag(name = "GitHub Repositories")
+@Tag(name =  "GitHub Repositories")
 public class GithubController {
 
     private final GithubSearchService searchService;
