@@ -1,0 +1,23 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: github-repository-searcher
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/github_searcher}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update          # creates/updates the table automatically
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+github:
+  api-url: https://api.github.com
+  token: ${GITHUB_TOKEN:}       # optional, see README
+  per-page: 30                  # max 100

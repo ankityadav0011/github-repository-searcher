@@ -1,0 +1,63 @@
+{
+  "info": {
+    "name": "GitHub Repository Searcher",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:8080" }],
+  "item": [
+    {
+      "name": "Search and save repositories",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/github/search",
+        "body": { "mode": "raw", "raw": "{\n  \"query\": \"spring boot\",\n  \"language\": \"Java\",\n  \"sort\": \"stars\"\n}" }
+      }
+    },
+    {
+      "name": "Get stored repositories (filters)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/github/repositories?language=Java&minStars=100&sort=stars",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "github", "repositories"],
+          "query": [
+            { "key": "language", "value": "Java" },
+            { "key": "minStars", "value": "100" },
+            { "key": "sort", "value": "stars" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get all stored repositories",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/github/repositories" }
+    },
+    {
+      "name": "Error: blank query (400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/github/search",
+        "body": { "mode": "raw", "raw": "{ \"query\": \"\" }" }
+      }
+    },
+    {
+      "name": "Error: invalid sort (400)",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/github/repositories?sort=popularity"
+      }
+    },
+    {
+      "name": "Empty result (200, empty list)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/github/search",
+        "body": { "mode": "raw", "raw": "{ \"query\": \"zzzxqwv-no-such-repo-9876\" }" }
+      }
+    }
+  ]
+}
