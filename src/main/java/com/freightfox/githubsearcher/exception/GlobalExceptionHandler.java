@@ -8,10 +8,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.Instant;
 import java.util.List;
@@ -67,6 +69,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleGithub(GithubApiException ex, HttpServletRequest request) {
         log.warn("GitHub API problem: {}", ex.getMessage(), ex);
         return build(HttpStatus.BAD_GATEWAY, ex.getMessage(), request, List.of());
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFound(NoResourceFoundException ex,
+                                                        HttpServletRequest request) {
+        return build(HttpStatus.NOT_FOUND, "Resource not found: " + request.getRequestURI(), request, List.of());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex,
+                                                                HttpServletRequest request) {
+        return build(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request, List.of());
     }
 
     @ExceptionHandler(Exception.class)
